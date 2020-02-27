@@ -15,5 +15,5 @@ def get_quotes(*symbols):
     return {symbol: get_quote(symbol) for symbol in symbols}
 
 for interface, status in interfaces:
-    if status == 'up':
+    if status.lower() == 'up':
         print(interface)
