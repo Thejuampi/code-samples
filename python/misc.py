@@ -10,9 +10,9 @@ if p.saturation >= 0.5:
 if p.luminosity >= 0.5:
     print('Wow, that is light')
 
-def get_quotes(*args):
+def get_quotes(*symbols):
     'Return a dictionary of real-time stock quotes'
-    return {symbol: get_quote(symbol) for symbol in args}
+    return {symbol: get_quote(symbol) for symbol in symbols}
 
 for interface, status in interfaces:
     if status == 'up':
