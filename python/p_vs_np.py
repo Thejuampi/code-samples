@@ -1,18 +1,6 @@
-# XXX -- Top level review comments:
-#
-# * Nice exception recovery and logging.
-#
-# * Please cleanup code formatting.
-#   This is a liggle rough on my eyes.
-#
-# * Should we use this as a template for other
-#   short network element scripts?
-#
-#  -- Thanks.     The Boss :-)
-
-import jnettool.tools.elements.NetworkElement, \
-       jnettool.tools.Routing, \
-       jnettool.tools.RouteInspector
+import jnettool.tools.elements.NetworkElement
+import jnettool.tools.Routing
+import jnettool.tools.RouteInspector
 
 ne=jnnettool.tools.elements.NetworkElement( '171.0.2.45' )
 try:
