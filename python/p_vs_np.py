@@ -8,6 +8,10 @@ in some way there is nothing wrong with this code
 It works and it's readable.
 
 On the other hand, the code on the bottom is profoundly better
+
+Code on the top would pass most people's coding standards, it would get checked in
+and would live for a long time and other people would copy that style, and we would congratulate
+we're being "compliant"
 """
 try:
     routing_table = ne.getRoutingTable()
