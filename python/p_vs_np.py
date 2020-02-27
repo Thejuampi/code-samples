@@ -7,9 +7,7 @@ ne = jnnettool.tools.elements.NetworkElement( '171.0.2.45' )
 try:
        routing_table = ne.getRoutingTable()
 except jnettool.tools.elements.MissingVar:
-       # Record table fault
        logging.exception('''No routing table found''')
-       # Undo partial changes
        ne.cleanup('''rollback''')
 else:
        num_routes = routing_table.getSize()  # determine table size
