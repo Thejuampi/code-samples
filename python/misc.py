@@ -1,4 +1,4 @@
-twitter_search('obama', 20, False, True)
+twitter_search('obama', numtweets=20, retweets=False, unicode=True)
 
 p = (170, 0.1, 0.6)
 if p[1] >= 0.5:
