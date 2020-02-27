@@ -3,7 +3,12 @@ import jnettool.tools.Routing
 import jnettool.tools.RouteInspector
 
 ne = jnnettool.tools.elements.NetworkElement('171.0.2.45')
+"""
+in some way there is nothing wrong with this code
+It works and it's readable.
 
+On the other hand, the code on the bottom is profoundly better
+"""
 try:
     routing_table = ne.getRoutingTable()
 except jnettool.tools.elements.MissingVar:
