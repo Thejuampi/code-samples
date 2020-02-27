@@ -2,7 +2,7 @@ import jnettool.tools.elements.NetworkElement
 import jnettool.tools.Routing
 import jnettool.tools.RouteInspector
 
-ne = jnnettool.tools.elements.NetworkElement( '171.0.2.45' )
+ne = jnnettool.tools.elements.NetworkElement('171.0.2.45')
 
 try:
     routing_table = ne.getRoutingTable()
@@ -17,6 +17,6 @@ else:
         ipaddr = route.getIPAddr()
         print("%15s -> %s" % (name, ipaddr))
 finally:
-    ne.cleanup('cleanup')
+    ne.cleanup('commit')
     ne.disconnect()
 
