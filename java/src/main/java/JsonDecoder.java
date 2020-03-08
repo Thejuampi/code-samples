@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 
 /**
  * !!!
- * Notice that this implementation were deliberately wrote
+ * Notice that this implementation was deliberately wrote
  * to show how NOT to write production code
  * !!!.
  */
