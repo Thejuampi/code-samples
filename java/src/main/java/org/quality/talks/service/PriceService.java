@@ -20,7 +20,7 @@ public final class PriceService implements WeirdExternalDataListener,
   @Override
   public void updateData(byte[] data) {
     final Pricing pricing = decoder.decode(data);
-    cache.put(pricing.getSymbol(), pricing);
+    cache.put(pricing.symbol(), pricing);
   }
 
   @Override
