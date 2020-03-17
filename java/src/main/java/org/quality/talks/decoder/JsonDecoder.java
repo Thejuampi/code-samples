@@ -4,13 +4,13 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
+import org.quality.talks.model.Pricing;
+import org.quality.talks.model.Pricing.PricingBuilder;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.quality.talks.model.Pricing;
-import org.quality.talks.model.Pricing.PricingBuilder;
 
 
 /**
@@ -26,40 +26,21 @@ public class JsonDecoder {
     private static final DateTimeFormatter TIMESTAMP_FORMATTER = DateTimeFormatter.ISO_DATE_TIME;
 
     public Pricing decode(byte[] input) {
-        String json = new String(input);
-        final PricingBuilder builder = Pricing.builder();
         try {
-            JsonObject jsonObject = JsonParser.parseString(json).getAsJsonObject();
-            try {
-                Optional<String> symbol = getSymbol(jsonObject);
-                if(symbol.isPresent()) {
-                    builder.symbol(symbol.get());
-                }
-            } catch (Exception e) {
-                LOGGER.log(Level.SEVERE, "error calculating symbol", e);
-            }
-
-            try {
-                Optional<LocalDateTime> timestamp = getTimestamp(jsonObject);
-                if(timestamp.isPresent()) {
-                   builder.timestamp(timestamp.get());
-                }
-            } catch (Exception e) {
-                LOGGER.log(Level.SEVERE, "error calculating timestamp", e);
-            }
-
-            try {
-                Optional<Double> price = getPrice(jsonObject);
-                if(price.isPresent()) {
-                   builder.price(price.get());
-                }
-            } catch (Exception e) {
-                LOGGER.log(Level.SEVERE, "error calculating timestamp", e);
-            }
-
+            return doDecodeV1(input);
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "error parsing json", e);
+            throw new PricingDecodingException(e);
         }
+    }
+
+    private Pricing doDecodeV1(byte[] input) {
+        String json = new String(input);
+        JsonObject jsonObject = JsonParser.parseString(json).getAsJsonObject();
+
+        PricingBuilder builder = Pricing.builder();
+        getSymbol(jsonObject).ifPresent(builder::symbol);
+        getPrice(jsonObject).ifPresent(builder::price);
+        getTimestamp(jsonObject).ifPresent(builder::timestamp);
 
         return builder.build();
     }

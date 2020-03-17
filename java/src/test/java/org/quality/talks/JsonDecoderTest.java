@@ -69,16 +69,16 @@ class JsonDecoderTest {
 
     var result = decoderUnderTest.decode(json.getBytes());
 
-    assertEquals("ABCD123", result.getSymbol());
-    assertEquals(7.5d, result.getPrice());
-    assertEquals(LocalDateTime.of(2020, Month.MARCH, 8, 17, 26, 34), result.getTimestamp());
+    assertEquals("ABCD123", result.symbol());
+    assertEquals(7.5d, result.price());
+    assertEquals(LocalDateTime.of(2020, Month.MARCH, 8, 17, 26, 34), result.timestamp());
   }
 
   @Test
   void decoupleImplementationDetailsFromTestedFeature() {
     // Given some input
     var input = pricingInputWith("aSymbol", 1.0, "2020-01-01T00:00:00");
-    var expected = expected("aSymbol", 1.0, timestamp(2020, JANUARY, 01));
+    var expected = expected("aSymbol", 1.0, timestamp(2020, JANUARY, 1));
     // When decoder gets call
     var actual = decoderUnderTest.decode(input);
     // Then we get what we expect
