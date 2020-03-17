@@ -49,7 +49,10 @@ class PricingServiceTest {
   @MethodSource("invalidInputs")
   void explodeCombinationsOfFailure(String symbol, Double price, String timestamp) {
     var invalidInput = input(symbol, price, timestamp);
-    assertThrows(Exception.class, () -> anInputEventIsReceived(invalidInput));
+
+    anInputEventIsReceived(invalidInput);
+
+    assertThat(serviceUnderTest.getPricing(symbol)).isNotPresent();
   }
 
   private static Object[][] invalidInputs() {
