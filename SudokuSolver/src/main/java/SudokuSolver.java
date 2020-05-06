@@ -4,28 +4,25 @@ import java.util.List;
 
 public class SudokuSolver {
 
-    public static void main(String[] args) throws Exception
-    {
+    public static void main(String[] args) throws Exception {
         new SudokuSolver().go(args[0]);
     }
 
-    private void go(String s) throws Exception
-    {
-            FileReader rd = new FileReader(s);
+    private void go(String s) throws Exception {
+        FileReader rd = new FileReader(s);
 
-                Grid grid = Grid.create(rd);
+        Grid grid = Grid.create(rd);
 
         ArrayList<Grid> solutions = new ArrayList<>();
-            solve(grid, solutions);
+        solve(grid, solutions);
 
         System.out.println("Original");
-            System.out.println(grid);
+        System.out.println(grid);
 
 
-        if (solutions.size() == 0)
-        {
+        if (solutions.size() == 0) {
             System.out.println("Unsolvable");
-        } else if(solutions.size() == 1) {
+        } else if (solutions.size() == 1) {
             System.out.println("Solved");
             System.out.println(solutions.get(0));
         } else {

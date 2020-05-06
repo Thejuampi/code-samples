@@ -25,7 +25,7 @@ public class Grid implements Cloneable {
     public static Grid create(Reader rd) {
         Grid grid = new Grid();
         try {
-            for (int loc = 0; loc < grid.cells.length;) {
+            for (int loc = 0; loc < grid.cells.length; ) {
                 int ch = rd.read();
 
                 if (ch < 0) {
@@ -63,14 +63,14 @@ public class Grid implements Cloneable {
     public boolean set(int loc, int num) {
         int r = loc / 9;
         int c = loc % 9;
-        int blockLoc = (r/3)*3 + c/3;
+        int blockLoc = (r / 3) * 3 + c / 3;
 
         boolean canSet = cells[loc] == 0
                 && (colsSet[c] & (1 << num)) == 0 //obvious!
                 && (rowsSet[r] & (1 << num)) == 0
                 && (subgridSet[blockLoc] & (1 << num)) == 0;
 
-        if(!canSet)
+        if (!canSet)
             return false;
 
         cells[loc] = num;
@@ -84,7 +84,7 @@ public class Grid implements Cloneable {
     public void clear(int loc) {
         int r = loc / 9;
         int c = loc % 9;
-        int blockLoc = (r/3)*3 + c/3;
+        int blockLoc = (r / 3) * 3 + c / 3;
 
         int num = cells[loc];
         cells[loc] = 0; // clear value
@@ -122,8 +122,7 @@ public class Grid implements Cloneable {
                 int num = cells[r * 9 + c];
                 if (num == 0) {
                     buf.append(". ");
-                }
-                else {
+                } else {
                     buf.append(num);
                     buf.append(" ");
                 }
