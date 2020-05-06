@@ -9,6 +9,8 @@ public class Grid implements Cloneable {
     public static final int ROWS = 9;
     public static final int COLUMNS = 9;
     public static final int EMPTY_SQUARE_NOT_FOUND = -1;
+    public static final int VALUE_NOT_FOUND = 0;
+    public static final int BOX_SIZE = 3;
 
     private Grid() {
     }
@@ -72,17 +74,17 @@ public class Grid implements Cloneable {
         int columnIndex = columnIndex(squareIndex);
         int boxIndex = boxIndex(rowIndex, columnIndex);
 
-        boolean canSet = squares[squareIndex] == 0
-                && (columnsBitSet[columnIndex] & (1 << num)) == 0 //obvious!
-                && (rowsBitSet[rowIndex] & (1 << num)) == 0
-                && (boxBitSet[boxIndex] & (1 << num)) == 0;
+        boolean allowed = squares[squareIndex] == VALUE_NOT_FOUND
+                && (columnsBitSet[columnIndex] & (1 << num)) == VALUE_NOT_FOUND //obvious!
+                && (rowsBitSet[rowIndex] & (1 << num)) == VALUE_NOT_FOUND
+                && (boxBitSet[boxIndex] & (1 << num)) == VALUE_NOT_FOUND;
 
-        if (!canSet)
+        if (!allowed)
             return false;
 
         squares[squareIndex] = num;
-        columnsBitSet[columnIndex] |= (1 << num);
         rowsBitSet[rowIndex] |= (1 << num);
+        columnsBitSet[columnIndex] |= (1 << num);
         boxBitSet[boxIndex] |= (1 << num);
 
         return true;
@@ -109,7 +111,7 @@ public class Grid implements Cloneable {
     }
 
     private int boxIndex(int rowIndex, int columnIndex) {
-        return (rowIndex / 3) * 3 + columnIndex / 3;
+        return (rowIndex / BOX_SIZE) * BOX_SIZE + columnIndex / BOX_SIZE;
     }
 
     @Override
