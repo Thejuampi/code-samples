@@ -3,13 +3,19 @@ import java.io.Reader;
 import java.io.StringReader;
 
 public class Grid implements Cloneable {
+
+    public static final int SQUARES = 81;
+    public static final int BOXES = 9;
+    public static final int ROWS = 9;
+    public static final int COLUMNS = 9;
+
     private Grid() {
     }
 
-    private int[] cells = new int[81];
-    private int[] colsSet = new int[9];
-    private int[] rowsSet = new int[9];
-    private int[] subgridSet = new int[9];
+    private int[] squares = new int[SQUARES];
+    private int[] colsSet = new int[COLUMNS];
+    private int[] rowsSet = new int[ROWS];
+    private int[] boxesSet = new int[BOXES];
 
     public static Grid create(int[][] numbers) {
         StringBuilder sb = new StringBuilder();
@@ -25,7 +31,7 @@ public class Grid implements Cloneable {
     public static Grid create(Reader rd) {
         Grid grid = new Grid();
         try {
-            for (int loc = 0; loc < grid.cells.length; ) {
+            for (int loc = 0; loc < grid.squares.length; ) {
                 int ch = rd.read();
 
                 if (ch < 0) {
@@ -52,8 +58,8 @@ public class Grid implements Cloneable {
     }
 
     public int findEmptyCell() {
-        for (int i = 0; i < cells.length; i++) {
-            if (cells[i] == 0) {
+        for (int i = 0; i < squares.length; i++) {
+            if (squares[i] == 0) {
                 return i;
             }
         }
@@ -65,18 +71,18 @@ public class Grid implements Cloneable {
         int c = loc % 9;
         int blockLoc = (r / 3) * 3 + c / 3;
 
-        boolean canSet = cells[loc] == 0
+        boolean canSet = squares[loc] == 0
                 && (colsSet[c] & (1 << num)) == 0 //obvious!
                 && (rowsSet[r] & (1 << num)) == 0
-                && (subgridSet[blockLoc] & (1 << num)) == 0;
+                && (boxesSet[blockLoc] & (1 << num)) == 0;
 
         if (!canSet)
             return false;
 
-        cells[loc] = num;
+        squares[loc] = num;
         colsSet[c] |= (1 << num);
         rowsSet[r] |= (1 << num);
-        subgridSet[blockLoc] |= (1 << num);
+        boxesSet[blockLoc] |= (1 << num);
 
         return true;
     }
@@ -86,26 +92,26 @@ public class Grid implements Cloneable {
         int c = loc % 9;
         int blockLoc = (r / 3) * 3 + c / 3;
 
-        int num = cells[loc];
-        cells[loc] = 0; // clear value
+        int num = squares[loc];
+        squares[loc] = 0; // clear value
         colsSet[c] ^= (1 << num); // bitwise XOR
         rowsSet[r] ^= (1 << num);
-        subgridSet[blockLoc] ^= (1 << num);
+        boxesSet[blockLoc] ^= (1 << num);
     }
 
     @Override
     protected Grid clone() {
         Grid g = new Grid();
-        g.cells = cells.clone();
+        g.squares = squares.clone();
         g.colsSet = colsSet.clone();
         g.rowsSet = rowsSet.clone();
-        g.subgridSet = subgridSet.clone();
+        g.boxesSet = boxesSet.clone();
 
         return g;
     }
 
-    public int[] getCells() {
-        return cells;
+    public int[] getSquares() {
+        return squares;
     }
 
     @Override
@@ -119,7 +125,7 @@ public class Grid implements Cloneable {
                 if (c % 3 == 0) {
                     buf.append("| ");
                 }
-                int num = cells[r * 9 + c];
+                int num = squares[r * 9 + c];
                 if (num == 0) {
                     buf.append(". ");
                 } else {
