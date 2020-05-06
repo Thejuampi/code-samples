@@ -8,14 +8,15 @@ public class Grid implements Cloneable {
     public static final int BOXES = 9;
     public static final int ROWS = 9;
     public static final int COLUMNS = 9;
+    public static final int EMPTY_SQUARE_NOT_FOUND = -1;
 
     private Grid() {
     }
 
     private int[] squares = new int[SQUARES];
-    private int[] colsSet = new int[COLUMNS];
-    private int[] rowsSet = new int[ROWS];
-    private int[] boxesSet = new int[BOXES];
+    private int[] rowsBitSet = new int[ROWS];
+    private int[] columnsBitSet = new int[COLUMNS];
+    private int[] boxBitSet = new int[BOXES];
 
     public static Grid create(int[][] numbers) {
         StringBuilder sb = new StringBuilder();
@@ -28,11 +29,11 @@ public class Grid implements Cloneable {
         return create(new StringReader(sb.toString()));
     }
 
-    public static Grid create(Reader rd) {
+    public static Grid create(Reader reader) {
         Grid grid = new Grid();
         try {
             for (int loc = 0; loc < grid.squares.length; ) {
-                int ch = rd.read();
+                int ch = reader.read();
 
                 if (ch < 0) {
                     return null;
@@ -42,7 +43,7 @@ public class Grid implements Cloneable {
                     while (ch >= 0
                             && ch != '\n'
                             && ch != '\r') {
-                        ch = rd.read();
+                        ch = reader.read();
                     }
                 } else if (ch >= '1' && ch <= '9') { // a "given" value
                     grid.set(loc, ch - '0');
@@ -57,55 +58,67 @@ public class Grid implements Cloneable {
         }
     }
 
-    public int findEmptyCell() {
+    public int findEmptySquare() {
         for (int i = 0; i < squares.length; i++) {
             if (squares[i] == 0) {
                 return i;
             }
         }
-        return -1; // not found
+        return EMPTY_SQUARE_NOT_FOUND;
     }
 
-    public boolean set(int loc, int num) {
-        int r = loc / 9;
-        int c = loc % 9;
-        int blockLoc = (r / 3) * 3 + c / 3;
+    public boolean set(int squareIndex, int num) {
+        int rowIndex = rowIndex(squareIndex);
+        int columnIndex = columnIndex(squareIndex);
+        int boxIndex = boxIndex(rowIndex, columnIndex);
 
-        boolean canSet = squares[loc] == 0
-                && (colsSet[c] & (1 << num)) == 0 //obvious!
-                && (rowsSet[r] & (1 << num)) == 0
-                && (boxesSet[blockLoc] & (1 << num)) == 0;
+        boolean canSet = squares[squareIndex] == 0
+                && (columnsBitSet[columnIndex] & (1 << num)) == 0 //obvious!
+                && (rowsBitSet[rowIndex] & (1 << num)) == 0
+                && (boxBitSet[boxIndex] & (1 << num)) == 0;
 
         if (!canSet)
             return false;
 
-        squares[loc] = num;
-        colsSet[c] |= (1 << num);
-        rowsSet[r] |= (1 << num);
-        boxesSet[blockLoc] |= (1 << num);
+        squares[squareIndex] = num;
+        columnsBitSet[columnIndex] |= (1 << num);
+        rowsBitSet[rowIndex] |= (1 << num);
+        boxBitSet[boxIndex] |= (1 << num);
 
         return true;
     }
 
+    private int columnIndex(int squareIndex) {
+        return squareIndex % 9;
+    }
+
+    private int rowIndex(int squareIndex) {
+        return squareIndex / 9;
+    }
+
     public void clear(int loc) {
-        int r = loc / 9;
-        int c = loc % 9;
-        int blockLoc = (r / 3) * 3 + c / 3;
+        int rowIndex = rowIndex(loc);
+        int columnIndex = columnIndex(loc);
+        int boxIndex = boxIndex(rowIndex, columnIndex);
 
         int num = squares[loc];
         squares[loc] = 0; // clear value
-        colsSet[c] ^= (1 << num); // bitwise XOR
-        rowsSet[r] ^= (1 << num);
-        boxesSet[blockLoc] ^= (1 << num);
+        columnsBitSet[columnIndex] ^= (1 << num); // bitwise XOR
+        rowsBitSet[rowIndex] ^= (1 << num);
+        boxBitSet[boxIndex] ^= (1 << num);
+    }
+
+    private int boxIndex(int rowIndex, int columnIndex) {
+        return (rowIndex / 3) * 3 + columnIndex / 3;
     }
 
     @Override
     protected Grid clone() {
         Grid g = new Grid();
         g.squares = squares.clone();
-        g.colsSet = colsSet.clone();
-        g.rowsSet = rowsSet.clone();
-        g.boxesSet = boxesSet.clone();
+        g.columnsBitSet = columnsBitSet.clone();
+        g.rowsBitSet = rowsBitSet.clone();
+        g.boxBitSet = boxBitSet.clone();
 
         return g;
     }

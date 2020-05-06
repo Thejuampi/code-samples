@@ -38,7 +38,7 @@ public class SudokuSolver {
             return;
         }
 
-        int loc = grid.findEmptyCell();
+        int loc = grid.findEmptySquare();
         if (loc < 0) {
             solutions.add(grid.clone());
             return;
