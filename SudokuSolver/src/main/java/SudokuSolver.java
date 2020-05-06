@@ -8,17 +8,17 @@ public class SudokuSolver {
         new SudokuSolver().go(args[0]);
     }
 
-    private void go(String s) throws Exception {
-        FileReader rd = new FileReader(s);
-
+    private void go(String sudokuPuzzleFilePath) throws Exception {
+        FileReader rd = new FileReader(sudokuPuzzleFilePath);
         Grid grid = Grid.create(rd);
-
         ArrayList<Grid> solutions = new ArrayList<>();
         solve(grid, solutions);
+        printResults(grid, solutions);
+    }
 
+    private static void printResults(Grid grid, ArrayList<Grid> solutions) {
         System.out.println("Original");
         System.out.println(grid);
-
 
         if (solutions.size() == 0) {
             System.out.println("Unsolvable");
@@ -30,7 +30,6 @@ public class SudokuSolver {
             System.out.println(solutions.get(0));
             System.out.println(solutions.get(1));
         }
-
     }
 
     private static void solve(Grid grid, List<Grid> solutions) {
