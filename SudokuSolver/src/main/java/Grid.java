@@ -35,22 +35,22 @@ public class Grid implements Cloneable {
         Grid grid = new Grid();
         try {
             for (int loc = 0; loc < grid.squares.length; ) {
-                int ch = reader.read();
+                int character = reader.read();
 
-                if (ch < 0) {
+                if (character < 0) {
                     return null;
                 }
 
-                if (ch == '#') { // skip to end-of-line indicator
-                    while (ch >= 0
-                            && ch != '\n'
-                            && ch != '\r') {
-                        ch = reader.read();
+                if (isComment(character)) { // skip to end-of-line indicator
+                    while (character >= 0
+                            && character != '\n'
+                            && character != '\r') {
+                        character = reader.read();
                     }
-                } else if (ch >= '1' && ch <= '9') { // a "given" value
-                    grid.set(loc, ch - '0');
+                } else if (isGivenValue(character)) {
+                    grid.set(loc, character - '0');
                     loc++;
-                } else if (ch == '.' || ch == '0') { // empty cell indicator
+                } else if (isEmptySquare(character)) {
                     loc++;
                 }
             }
@@ -58,6 +58,18 @@ public class Grid implements Cloneable {
         } catch (IOException e) {
             return null; // silent fail!
         }
+    }
+
+    private static boolean isComment(int character) {
+        return character == '#';
+    }
+
+    private static boolean isEmptySquare(int character) {
+        return character == '.' || character == '0';
+    }
+
+    private static boolean isGivenValue(int character) {
+        return character >= '1' && character <= '9';
     }
 
     public int findEmptySquare() {
