@@ -42,11 +42,7 @@ public class Grid implements Cloneable {
                 }
 
                 if (isComment(character)) { // skip to end-of-line indicator
-                    while (character >= 0
-                            && character != '\n'
-                            && character != '\r') {
-                        character = reader.read();
-                    }
+                    skipUntilEndOfLine(reader, character);
                 } else if (isGivenValue(character)) {
                     grid.set(loc, character - '0');
                     loc++;
@@ -57,6 +53,14 @@ public class Grid implements Cloneable {
             return grid;
         } catch (IOException e) {
             return null; // silent fail!
+        }
+    }
+
+    private static void skipUntilEndOfLine(Reader reader, int character) throws IOException {
+        while (character >= 0
+                && character != '\n'
+                && character != '\r') {
+            character = reader.read();
         }
     }
 
