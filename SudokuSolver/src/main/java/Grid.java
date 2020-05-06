@@ -34,21 +34,20 @@ public class Grid implements Cloneable {
     public static Grid create(Reader reader) {
         Grid grid = new Grid();
         try {
-            for (int loc = 0; loc < grid.squares.length; ) {
+            for (int squareIndex = 0; squareIndex < grid.squares.length; ) {
                 int character = reader.read();
 
                 if (character < 0) {
                     return null;
                 }
 
-                if (isComment(character)) { // skip to end-of-line indicator
+                if(isGivenValue(character))
+                    grid.set(squareIndex++, character - '0');
+                else if (isEmptySquare(character))
+                    squareIndex++;
+                else if (isComment(character))
                     skipUntilEndOfLine(reader, character);
-                } else if (isGivenValue(character)) {
-                    grid.set(loc, character - '0');
-                    loc++;
-                } else if (isEmptySquare(character)) {
-                    loc++;
-                }
+
             }
             return grid;
         } catch (IOException e) {
